@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Auth\MagicAuthentication;
+use App\UserLoginToken;
 
 class MagicLoginController extends Controller
 {
@@ -23,6 +25,15 @@ class MagicLoginController extends Controller
 
       return redirect()->to($this->redirectOnRequested)
                        ->withSuccess('We\'ve sent you a magic link!');
+    }
+
+    public function validateToken(Request $request, UserLoginToken $token)
+    {
+      $token->delete();
+
+      Auth::login($token->user, $request->remember);
+
+      return redirect()->intended();
     }
 
     protected function validateLogin(Request $request)
