@@ -16,6 +16,12 @@ class UserLoginToken extends Model
       return $this->created_at->diffInSeconds(Carbon::now()) > self::TOKEN_EXPIRY;
     }
 
+    public function scopeExpired($query)
+    {
+        return $query->where('created_at', '<', Carbon::now()
+                    ->subSeconds(self::TOKEN_EXPIRY));
+    }
+
     public function belongsToEmail($email)
     {
         return (bool) ($this->user->where('email', $email)->count() === 1);
