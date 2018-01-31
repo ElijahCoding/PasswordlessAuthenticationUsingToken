@@ -20,7 +20,10 @@ class MagicAuthentication
   {
     $user = $this->getUserByIdentifier($this->request->get($this->identifier)); // $request->email
 
-    $user->storeToken();
+    $user->storeToken()->sendMagicLink([
+      'remember' => $this->request->has('remember'),
+      'emai' => $user->email
+    ]);
   }
 
   protected function getUserByIdentifier($value)

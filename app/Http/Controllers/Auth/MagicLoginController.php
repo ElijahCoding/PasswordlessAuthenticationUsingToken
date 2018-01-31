@@ -8,6 +8,8 @@ use App\Auth\MagicAuthentication;
 
 class MagicLoginController extends Controller
 {
+    protected $redirectOnRequested = '/login/magic';
+
     public function show()
     {
       return view('auth.magic.login');
@@ -18,6 +20,9 @@ class MagicLoginController extends Controller
       $this->validateLogin($request);
 
       $auth->requestLink();
+
+      return redirect()->to($this->redirectOnRequested)
+                       ->withSuccess('We\'ve sent you a magic link!');
     }
 
     protected function validateLogin(Request $request)
